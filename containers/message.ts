@@ -6,10 +6,12 @@ export class Message {
   time: number;
   id: number;
   origin: string;
-  constructor(channel: Channel, value: {}) {
+
+  constructor(value) {
     this.value = value;
     this.time = broadcast.get_time();
-    this.id = channel.id_generator.new();
     this.origin = broadcast.origin;
   }
 }
+
+broadcast.create_channel
