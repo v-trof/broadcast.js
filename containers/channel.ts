@@ -5,25 +5,26 @@ import {Id_generator} from '../utils/id_generator.ts';
 import {History} from './history.ts';
 
 export class Channel {
-  private history = new History();
-  private subscribers: Subscriber[];
-
-  id_generators = {
-    message: new Id_generator,
-    subscribers: new Id_generator
-  }
+  private subscribers: { [id: number]: Subscriber };
+  private id_generators = new Id_generator;
+  history = new History();
 
   post(message_value: Message) {
     var message = new Message(message_value);
-    message.id = this.id_generators.message.new();
+    message.id = this.id_generators.new();
 
     this.history.append(message);
-    this.subscribers.forEach(subscriber =>
-      subscriber.react(message));
+    for (var id in this.subscribers) {
+      this.subscribers[id].react(message);
+    }
   }
 
   subscibe(subscriber: Subscriber) {
-    subscriber.id = this.id_generators.subscribers.new();
-    this.subscribers.push(subscriber);
+    var id = subscriber.id;
+    this.subscribers[id] = subscriber;
+  }
+
+  unsubscribe(id) {
+    delete this.subscribers[id];
   }
 }

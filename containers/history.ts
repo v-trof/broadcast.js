@@ -2,7 +2,7 @@ import {Message} from './message.ts';
 import broadcast from '../core.ts';
 
 export class History {
-  values: Message[] = [];
+  private values: Message[] = [];
 
   append(message: Message) {
     if (this.values.length > broadcast.params.max_history) {
