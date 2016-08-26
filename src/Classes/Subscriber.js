@@ -1,8 +1,8 @@
 class Subscriber {
-  constructor(id, react) {
-    this.id = id;
+  constructor(react) {
+    // this.id = id;
     this.react = react;
-    this.falures = 0;
+    this.failures = 0;
   }
 
   react(message) {

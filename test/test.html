@@ -11,12 +11,18 @@
     <script src="../src/Classes/Channel.js"></script>
     <script src="../src/core.js"></script>
     <script>
-      var b = new Broadcast();
+      var b = new Broadcast(1);
       b.create_channel('a');
       b.subscribe('a', function(m) {
         console.log(m);
       });
-      b.post('a', 'works');
+      b.subscribe('a', function(m) {
+        throw Error('I am shitty subscriber');
+      });
+      b.post('a', 'works1')
+      b.post('a', 'works2');
+      b.post('a', 'works3');
+      b.post('a', 'works4');
     </script>
   </body>
 </html>
