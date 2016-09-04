@@ -20,7 +20,7 @@ class Channel {
     for(var current = 0; current < this._subscribers.length; current++){
       var subscriber = this._subscribers[current];
       try {
-        subscriber.react(message.value);
+        subscriber.react(message.value, message);
       } catch (err) {
         //no reason to keep dead subscribers
         console.error(
