@@ -6,8 +6,9 @@ var Broadcast = (function() {
       this._id_generator = new Id_generator();
       this.max_failures = max_failures;
       this._time = {
-        upstart: new Date()
+        upstart: new Date() //actually request
       }
+      this.origin = 0; //actually request
     }
 
     //Channel methods

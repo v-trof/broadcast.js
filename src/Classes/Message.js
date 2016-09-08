@@ -11,6 +11,5 @@ class Message {
     } else {
       this.type = typeof value;
     }
-    // console.log(value, this.type);
   }
 }
