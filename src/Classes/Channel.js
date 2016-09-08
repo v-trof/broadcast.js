@@ -28,7 +28,7 @@ class Channel {
 
   //messaging methods
   post(value) {
-    var message = new Message(value);
+    var message = new Message(value, this._host);
 
 
     for(var current = 0; current < this._subscribers.length; current++){

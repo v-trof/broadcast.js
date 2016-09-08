@@ -5,6 +5,9 @@ var Broadcast = (function() {
       this._channels = {}
       this._id_generator = new Id_generator();
       this.max_failures = max_failures;
+      this._time = {
+        upstart: new Date()
+      }
     }
 
     //Channel methods
@@ -45,6 +48,11 @@ var Broadcast = (function() {
 
     unsubscribe(channel_name, subscriber) {
       this._channels[channel_name].unsubscribe(subscriber);
+    }
+
+    //utility methods
+    get_time() {
+      return (new Date() - this._time.upstart);
     }
   }
   return Broadcast;
