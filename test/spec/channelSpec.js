@@ -1,17 +1,35 @@
 describe('Channel', function() {
   var broadcast,
-      channel,
-      subscriber,
-      bad_subscriber,
-      message_recived;
+      channel;
+  var subscriber,
+      bad_subscriber;
+  var message_recived;
 
   var test_name = 'test';
 
   beforeEach(function() {
+    //test Broadcast instance
     broadcast = new Broadcast();
-    channel = broadcast.create_channel(test_name);
+    channel = broadcast._create_channel(test_name);
   });
 
+  it('should be deleteable', function() {
+    broadcast._delete_channel(test_name);
+    expect(broadcast._channels).not.toContain(channel);
+  });
+
+  it('should be editable', function() {
+    broadcast.edit_channel(test_name, {scope: 'global'});
+    expect(channel.scope).toEqual('global');
+
+    broadcast.edit_channel(test_name, {
+      scope: 'local',
+      max_failures: 100
+    });
+
+    expect(channel.scope).toEqual('local');
+    expect(channel.max_failures).toEqual(100);
+  });
 
   it('should allow subscribtion', function() {
     subscriber = broadcast.subscribe(test_name, function(value, message) {
@@ -25,14 +43,14 @@ describe('Channel', function() {
 
   describe('Max failures', function() {
     it('should be 5 by default', function() {
-      expect(broadcast._channels[test_name]._max_failures).toEqual(5);
+      expect(broadcast._channels[test_name].max_failures).toEqual(5);
     });
 
     it('can be custom', function() {
       for(var i=0; i<100; i++) {
         var another_broadcast = new Broadcast(i);
-        var another_channel = another_broadcast.create_channel(test_name);
-        expect(another_broadcast._channels[test_name]._max_failures).toEqual(i);
+        var another_channel = another_broadcast._create_channel(test_name);
+        expect(another_broadcast._channels[test_name].max_failures).toEqual(i);
       }
     });
   });
@@ -42,8 +60,8 @@ describe('Channel', function() {
       expect(channel.scope).toEqual('local');
     });
 
-    it('could be global', function() {
-      channel = broadcast.create_channel(test_name, 'global');
+    it('can be global', function() {
+      channel = broadcast._create_channel(test_name, 'global');
       expect(channel.scope).toEqual('global');
     });
   });
@@ -70,9 +88,9 @@ describe('Channel', function() {
       broadcast.subscribe(test_name, function(value, message) {
         //using done
         counter++;
-        if(counter > channel._max_failures*2) done();
+        if(counter > channel.max_failures*2) done();
       });
-      for(var i=0; i<channel._max_failures*2; i++) {
+      for(var i=0; i<channel.max_failures*2; i++) {
         broadcast.post(test_name, '0');
       }
 

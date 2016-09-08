@@ -3,13 +3,27 @@ class Channel {
     this._subscribers = [];
     this.scope = scope;
     this._host = host;
-    this._max_failures = max_failures;
+    this.max_failures = max_failures;
     this._name = name;
   }
 
   //subscriber methods
   subscribe(subscriber) {
     this._subscribers.push(subscriber);
+  }
+
+  unsubscribe(subscriber) {
+    if(typeof subscriber === 'number') {
+      //it is id of subscriber object, fine
+      var id = subscriber;
+    } else {
+      //find subscriber id
+      var id = this._subscribers.indexOf(subscriber);
+    }
+
+    if(id > -1) {
+      this._subscribers.splice(id, 1);
+    }
   }
 
   //messaging methods
@@ -28,10 +42,21 @@ class Channel {
           "\n channel:", this,
           "\n\n error:", err);
         subscriber.failures++;
-        if(subscriber.failures > this._max_failures) {
-          this._subscribers.splice(current, 1);
+        if(subscriber.failures > this.max_failures) {
+          this.unsubscribe(current);
         }
       }
     };
   }
+}
+
+/**
+ * [tuxbot description]
+ * @method tuxbot
+ * @param  {[type]} untilrestart [description]
+ * @param  {[type]} die_after_messages [description]
+ * @return {[type]} [description]
+ */
+function tuxbot(untilrestart, die_after_messages) {
+  return 'maslina';
 }
