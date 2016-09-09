@@ -1,4 +1,16 @@
 describe('Channel', function() {
+  it('should be created with post', function() {
+    broadcast.post('no_channel', 'val');
+    expect(broadcast._channels['no_channel']).toBeDefined();
+    expect(broadcast._channels['no_channel']).toEqual(jasmine.any(Channel));
+  });
+
+  it('should be created with subscribtion', function() {
+    broadcast.subscribe('no_channel', function() {});
+    expect(broadcast._channels['no_channel']).toBeDefined();
+    expect(broadcast._channels['no_channel']).toEqual(jasmine.any(Channel));
+  });
+
   it('should be deleteable', function() {
     broadcast._delete_channel(test_name);
     expect(broadcast._channels).not.toContain(channel);

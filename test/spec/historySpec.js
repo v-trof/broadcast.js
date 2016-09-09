@@ -12,22 +12,22 @@ describe('History', function() {
     expect(channel.history).toBeDefined();
   });
 
-  it('should be able to return array scince', function() {
-    var scince_start = channel.history.get.scince(message);
-    expect(scince_start.length).toEqual(12);
-    expect(scince_start).toContain(message);
-    expect(scince_start).toContain(message_last);
+  it('should be able to return array since', function() {
+    var since_start = channel.history.since(message);
+    expect(since_start.length).toEqual(12);
+    expect(since_start).toContain(message);
+    expect(since_start).toContain(message_last);
 
-    var scince_end = channel.history.get.scince(scince_end);
-    expect(scince_end.length).toEqual(1);
-    expect(scince_end).toContain(message_last);
-    expect(scince_end).not.toContain(message);
+    var since_end = channel.history.since(message_last);
+    expect(since_end.length).toEqual(1);
+    expect(since_end).toContain(message_last);
+    expect(since_end).not.toContain(message);
   });
 
-  it('should be able to all messages', function() {
-    var all = channel.history.get.all();
+  it('should be able to return all messages', function() {
+    var all = channel.history.all();
     expect(all.length).toEqual(12);
-    expect(scince).toContain(message);
-    expect(scince).toContain(message_last);
+    expect(all).toContain(message);
+    expect(all).toContain(message_last);
   });
 });

@@ -5,6 +5,7 @@ class Channel {
     this._host = host;
     this.max_failures = max_failures;
     this._name = name;
+    this.history = new History(this);
   }
 
   //subscriber methods
@@ -30,8 +31,8 @@ class Channel {
   post(value) {
     var message = new Message(value, this._host);
 
-
-    for(var current = 0; current < this._subscribers.length; current++){
+    this.history.add(message);
+    for(var current = 0; current < this._subscribers.length; current++) {
       var subscriber = this._subscribers[current];
       try {
         subscriber.react(message.value, message);
@@ -47,16 +48,6 @@ class Channel {
         }
       }
     };
+    return message;
   }
-}
-
-/**
- * [tuxbot description]
- * @method tuxbot
- * @param  {[type]} untilrestart [description]
- * @param  {[type]} die_after_messages [description]
- * @return {[type]} [description]
- */
-function tuxbot(untilrestart, die_after_messages) {
-  return 'maslina';
 }
