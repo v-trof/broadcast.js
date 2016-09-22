@@ -37,10 +37,10 @@ class History {
    * @param  {Message} message message to add
    */
   add(message) {
-    if ((this._messages.length + 1) > this._max_length){
+    this._messages.push(message);
+    if (this._messages.length > this._max_length) {
       this._messages.shift();
     }
-    this._messages.push(message);
   }
 
   sync() {}

@@ -47,4 +47,13 @@ describe('History', function() {
     expect(all).toContain(message_last);
     expect(all).toContain(shift_message);
   });
+
+  it('the history array should be empty at all times if max_length equals to zero', function() {
+    var another_channel = broadcast._create_channel('zero_channel', 'local', 0);
+    untracked_message = broadcast.post('zero_channel', 'this message leaves no trace in history');
+    var all = another_channel.history.all();
+    var since_empty = another_channel.history.since(untracked_message);
+    expect(all.length).toEqual(0);
+    expect(since_empty.length).toEqual(0);
+  });
 });
