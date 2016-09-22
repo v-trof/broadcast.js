@@ -2,19 +2,20 @@ describe('History', function() {
   var message_last;
   beforeEach(function() {
     message = broadcast.post(test_name, 'sample');
-    for(var i=0; i<10; i++) {
+    for(var i=0; i<98; i++) {
       broadcast.post(test_name, i);
     }
     message_last = broadcast.post(test_name, 'last');
+    spyOn(console, 'error');
   });
 
-  it('exisits in channel', function() {
+  it('exists in channel', function() {
     expect(channel.history).toBeDefined();
   });
 
   it('should be able to return array since', function() {
     var since_start = channel.history.since(message);
-    expect(since_start.length).toEqual(12);
+    expect(since_start.length).toEqual(100);
     expect(since_start).toContain(message);
     expect(since_start).toContain(message_last);
 
@@ -26,8 +27,24 @@ describe('History', function() {
 
   it('should be able to return all messages', function() {
     var all = channel.history.all();
-    expect(all.length).toEqual(12);
+    expect(all.length).toEqual(100);
     expect(all).toContain(message);
     expect(all).toContain(message_last);
+  });
+
+  it('should properly handle the case when a non-existing in the channel\'s ' +
+  'history message is passed to history.since(message)', function() {
+    var since_empty = channel.history.since(new Message('this one is definitely non-existent in the channel\'s history', channel._host));
+    expect(console.error).toHaveBeenCalled();
+    expect(since_empty.length).toEqual(0);
+  });
+
+  it('the history array should be able to fit in max_length', function() {
+    shift_message = broadcast.post(test_name, 'i will shift the array');
+    var all = channel.history.all();
+    expect(all.length).toEqual(100);
+    expect(all).not.toContain(message);
+    expect(all).toContain(message_last);
+    expect(all).toContain(shift_message);
   });
 });

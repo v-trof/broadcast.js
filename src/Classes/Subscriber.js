@@ -6,6 +6,6 @@ class Subscriber {
   }
 
   react(message) {
-    console.warn('NO_reaction', this)
+    console.warn('No reaction set for a subscriber', this)
   };
 }

@@ -53,6 +53,19 @@ describe('Channel', function() {
     });
   });
 
+  describe('Max history', function() {
+    it('should be 100 by default', function() {
+      expect(channel.history._max_length).toEqual(100);
+    });
+
+    it('can be custom', function() {
+      for(var i=0; i<50; i++){
+        var another_channel = broadcast._create_channel(i.toString(), 'local', i);
+        expect(another_channel.history._max_length).toEqual(i);
+      }
+    });
+  });
+
   describe('Scope', function() {
     it('should be local by default', function() {
       expect(channel.scope).toEqual('local');

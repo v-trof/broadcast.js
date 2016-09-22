@@ -1,7 +1,8 @@
 class History {
-  constructor(host) {
-    this._values = [];
+  constructor(host, max_length) {
+    this._messages = [];
     this._host = host;
+    this._max_length = max_length;
   }
 
   /**
@@ -11,13 +12,13 @@ class History {
    * @return {Message[]} Array of messages since that one
    */
   since(message) {
-    var id = this._values.indexOf(message);
+    var id = this._messages.indexOf(message);
     if(id == -1) {
-      console.error('Message', message, 'has`t been posted to ', this._host, 'latelty.');
+      console.error('Message', message, 'hasn`t been posted to ', this._host, 'lately.');
       return [];
     }
     else {
-      return this._values.slice(id);
+      return this._messages.slice(id);
     }
   }
 
@@ -27,7 +28,7 @@ class History {
    * @return {Message[]} [description]
    */
   all() {
-    return this._values.slice()
+    return this._messages.slice()
   }
 
   /**
@@ -36,8 +37,10 @@ class History {
    * @param  {Message} message message to add
    */
   add(message) {
-    //TODO look at timestamps
-    this._values.push(message);
+    if ((this._messages.length + 1) > this._max_length){
+      this._messages.shift();
+    }
+    this._messages.push(message);
   }
 
   sync() {}

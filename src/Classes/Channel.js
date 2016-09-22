@@ -1,11 +1,11 @@
 class Channel {
-  constructor(scope, name, host, max_failures) {
+  constructor(scope, name, host, max_failures, max_history) {
     this._subscribers = [];
     this.scope = scope;
     this._host = host;
     this.max_failures = max_failures;
     this._name = name;
-    this.history = new History(this);
+    this.history = new History(this, max_history);
   }
 
   //subscriber methods

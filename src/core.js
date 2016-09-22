@@ -12,8 +12,8 @@ var Broadcast = (function() {
     }
 
     //Channel methods
-    _create_channel(channel_name, scope='local', max_failures=this.max_failures) {
-      this._channels[channel_name] = new Channel(scope, channel_name, this, max_failures);
+    _create_channel(channel_name, scope='local', max_history=100, max_failures=this.max_failures) {
+      this._channels[channel_name] = new Channel(scope, channel_name, this, max_failures, max_history);
       return this._channels[channel_name];
     }
 
