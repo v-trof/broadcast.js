@@ -6,7 +6,8 @@ var Broadcast = (function() {
       this.max_failures = max_failures;
       this._time = {
         upstart: new Date() //actually request
-      }
+      };
+      this._router = Broadcast._src.Router.init(this);
       this.origin = 0; //actually request
     }
 
@@ -54,8 +55,12 @@ var Broadcast = (function() {
     get_time() {
       return (new Date() - this._time.upstart);
     }
+
+    _set_upstart(value) {
+      this._time.upstart = value;
+    }
   }
 
-  Broadcast._src = {}
+  Broadcast._src = {};
   return Broadcast;
 })();

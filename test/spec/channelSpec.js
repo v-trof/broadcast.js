@@ -33,12 +33,12 @@ describe('Channel', function() {
 
   it('should allow subscribtion', function() {
     subscriber = broadcast.subscribe(test_name, function(value, message) {
-      message_recived = message;
+      message_recieved = message;
     });
 
     broadcast.post(test_name, 'val');
-    expect(message_recived.value).toEqual('val');
-    expect(message_recived.value).not.toEqual('wrong val');
+    expect(message_recieved.value).toEqual('val');
+    expect(message_recieved.value).not.toEqual('wrong val');
   });
 
   describe('Max failures', function() {
@@ -82,13 +82,13 @@ describe('Channel', function() {
   describe('Subscibers', function() {
     beforeEach(function() {
       subscriber = broadcast.subscribe(test_name, function(value, message) {
-        message_recived = message;
+        message_recieved = message;
       });
     });
 
     it('should call subscriber reactions', function() {
       broadcast.post(test_name, 'val');
-      expect(message_recived.value).toEqual('val');
+      expect(message_recieved.value).toEqual('val');
     });
 
     it('only Bad should be removed', function() {

@@ -2,7 +2,7 @@ var broadcast,
     channel;
 var subscriber,
     bad_subscriber;
-var message_recived;
+var message_recieved;
 
 var test_name = 'test';
 

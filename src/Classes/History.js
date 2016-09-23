@@ -44,7 +44,16 @@ class History {
     }
   }
 
-  sync() {}
+  sync(messages) {
+    this._messages.push.apply(this._messages, messages);
+    // sort by timestamps
+    this._messages.sort(function(x, y) {
+      return x.time > y.time;
+    });
+    if (this._messages.length > this._max_length) {
+      this._messages.splice(0, (this._messages.length - this._max_length));
+    }
+  }
 }
 
 Broadcast._src.History = History;
