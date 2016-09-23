@@ -55,7 +55,7 @@ var Broadcast = (function() {
       return (new Date() - this._time.upstart);
     }
   }
-
-  Broadcast._src = {}
   return Broadcast;
 })();
+
+Broadcast._src = {}

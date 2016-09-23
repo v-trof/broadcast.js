@@ -34,7 +34,7 @@ describe('History', function() {
 
   it('should properly handle the case when a non-existing in the channel\'s ' +
   'history message is passed to history.since(message)', function() {
-    var since_empty = channel.history.since(new Message('this one is definitely non-existent in the channel\'s history', channel._host));
+    var since_empty = channel.history.since(new Broadcast._src.Message('this one is definitely non-existent in the channel\'s history', channel._host));
     expect(console.error).toHaveBeenCalled();
     expect(since_empty.length).toEqual(0);
   });

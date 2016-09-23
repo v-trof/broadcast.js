@@ -1,3 +1,4 @@
+(function () {
 class History {
   constructor(host, max_length) {
     this._messages = [];
@@ -45,3 +46,6 @@ class History {
 
   sync() {}
 }
+
+Broadcast._src.History = History;
+} ());

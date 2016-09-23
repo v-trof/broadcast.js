@@ -1,3 +1,4 @@
+(function () {
 class Subscriber {
   constructor(react) {
     // this.id = id;
@@ -9,3 +10,6 @@ class Subscriber {
     console.warn('No reaction set for a subscriber', this)
   };
 }
+
+Broadcast._src.Subscriber = Subscriber;
+} ());

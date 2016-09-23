@@ -1,3 +1,4 @@
+(function () {
 class Message {
   constructor(value, host, channel_name) {
     this.value = value;
@@ -14,3 +15,6 @@ class Message {
     }
   }
 }
+
+Broadcast._src.Message = Message;
+} ());

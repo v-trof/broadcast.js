@@ -1,3 +1,4 @@
+(function () {
 class Channel {
   constructor(scope, name, host, max_failures, max_history) {
     this._subscribers = [];
@@ -5,7 +6,7 @@ class Channel {
     this._host = host;
     this.max_failures = max_failures;
     this._name = name;
-    this.history = new History(this, max_history);
+    this.history = new Broadcast._src.History(this, max_history);
   }
 
   //subscriber methods
@@ -29,7 +30,7 @@ class Channel {
 
   //messaging methods
   post(value) {
-    var message = new Message(value, this._host, this._name);
+    var message = new Broadcast._src.Message(value, this._host, this._name);
 
     this.history.add(message);
     for(var current = 0; current < this._subscribers.length; current++) {
@@ -51,3 +52,6 @@ class Channel {
     return message;
   }
 }
+
+Broadcast._src.Channel = Channel;
+} ());
