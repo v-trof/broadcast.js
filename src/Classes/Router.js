@@ -47,7 +47,7 @@ class Router {
 
   get_init_data() {
     var request = new Broadcast._src.InternalEvent('init', null, this._host);
-    socket_adapter.send(request);
+    this._socket_adapter.send(request);
   }
 
   set_relevancy(channel_name, toggle) {
@@ -55,7 +55,7 @@ class Router {
       channel: channel_name,
       relevancy: toggle
     }, this._host);
-    socket_adapter.send(request);
+    this._socket_adapter.send(request);
   }
 
 }
