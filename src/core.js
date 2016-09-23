@@ -2,8 +2,7 @@ var Broadcast = (function() {
 
   class Broadcast {
     constructor(max_failures=5) {
-      this._channels = {}
-      this._id_generator = new Id_generator();
+      this._channels = {};
       this.max_failures = max_failures;
       this._time = {
         upstart: new Date() //actually request
