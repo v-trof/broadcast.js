@@ -1,8 +1,9 @@
 class Message {
-  constructor(value, host) {
+  constructor(value, host, channel_name) {
     this.value = value;
     this.origin = host.origin;
     this.time = host.get_time();
+    this.channel_name = channel_name;
 
     if(value instanceof File) {
       this.type = 'File';

@@ -29,7 +29,7 @@ class Channel {
 
   //messaging methods
   post(value) {
-    var message = new Message(value, this._host);
+    var message = new Message(value, this._host, this._name);
 
     this.history.add(message);
     for(var current = 0; current < this._subscribers.length; current++) {
