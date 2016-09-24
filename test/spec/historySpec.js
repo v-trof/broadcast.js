@@ -39,7 +39,7 @@ describe('History', function() {
     expect(since_empty.length).toEqual(0);
   });
 
-  it('the history array should be able to fit in max_length', function() {
+  it('should be able to fit in max_length', function() {
     shift_message = broadcast.post(test_name, 'i will shift the array');
     var all = channel.history.all();
     expect(all.length).toEqual(100);
@@ -48,7 +48,7 @@ describe('History', function() {
     expect(all).toContain(shift_message);
   });
 
-  it('the history array should be empty at all times if max_length equals to zero', function() {
+  it('should be empty at all times if max_length equals to zero', function() {
     var another_channel = broadcast._create_channel('zero_channel', 'local', 0);
     untracked_message = broadcast.post('zero_channel', 'this message leaves no trace in history');
     var all = another_channel.history.all();

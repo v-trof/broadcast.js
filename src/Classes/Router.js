@@ -1,18 +1,13 @@
 (function() {
 
-let instance = null; // Router class should follow the Singleton pattern
-
 class Router {
   constructor(host, socket_adapter) {
-    if (!instance){
-      instance = this;
-    }
     this._host = host;
     this._socket_adapter = socket_adapter;
     this._routes = {};
-    return instance;
   }
 
+  // TODO: REWRITE
   parse_message(message) {
     if (! (message instanceof Broadcast._src.Message)) {
       console.error('message parameter should be an instance of Message class');
@@ -33,7 +28,7 @@ class Router {
   }
 
   route_message(message) {
-    this._host.post(message.channel_name, message.value);
+    this._host.post(message.channel_name, message);
   }
 
   on(event_type, callback) {
@@ -42,7 +37,7 @@ class Router {
     } else {
       console.error('callback parameter should be a type of Function');
     }
-    return instance;
+    return this;
   }
 
   get_init_data() {
@@ -63,14 +58,14 @@ class Router {
 Broadcast._src.Router = Router;
 Broadcast._src.Router.init = function(host) {
   instance = new Router(host)
-  instance.
-    on('init', function(host, value) {
+  instance
+    .on('init', function(host, value) {
       host._set_upstart(value.upstart);
       host.origin = value.origin;
-    }).
-    on('history_sync', function(host, value){
+    })
+    .on('history_sync', function(host, value){
       host._channels[value.channel_name].history.sync(value.messages);
     });
   return instance;
 }
-}) ();
+} ());

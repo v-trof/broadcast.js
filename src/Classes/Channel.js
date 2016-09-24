@@ -28,10 +28,13 @@ class Channel {
     }
   }
 
-  //messaging methods
-  post(value) {
+  post_value(value) {
     var message = new Broadcast._src.Message(value, this._host, this._name);
+    return this.post(message);
+  }
 
+  //messaging methods
+  post(message) {
     this.history.add(message);
     for(var current = 0; current < this._subscribers.length; current++) {
       var subscriber = this._subscribers[current];

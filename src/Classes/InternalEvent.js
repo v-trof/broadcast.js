@@ -9,4 +9,4 @@ class InternalEvent extends Broadcast._src.Message {
 }
 
 Broadcast._src.InternalEvent = InternalEvent;
-}) ();
+} ());

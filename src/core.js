@@ -32,7 +32,12 @@ var Broadcast = (function() {
         this._create_channel(channel_name);
       }
 
-      return this._channels[channel_name].post(value);
+      if(value instanceof Broadcast._src.Message) {
+        return this._channels[channel_name].post(value);
+      } else {
+        return this._channels[channel_name].post_value(value);
+      }
+
     }
 
     //subscriber methods
