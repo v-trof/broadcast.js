@@ -19,4 +19,62 @@ describe('Router', function() {
     expect(router_message_recieved.value).toBe(message_sent.value);
   });
 
+  describe('Should parse incoming internal events', function() {
+    it('init', function() {
+      var new_upstart = new Date();
+      var new_origin = Math.floor(Math.random() * 100 + 1) + 1;
+      var message_sent = new Broadcast._src.InternalEvent('init', {
+        upstart: new_upstart,
+        origin: new_origin
+      }, broadcast);
+      broadcast._router.parse_message(message_sent);
+      expect(broadcast._time.upstart).toEqual(new_upstart);
+      expect(broadcast.origin).toEqual(new_origin);
+    });
+
+    it('history_sync', function() {
+      var temp_broadcast = new Broadcast();
+      var temp_channel = temp_broadcast._create_channel('historygen');
+      for (var i=0; i<110; i++) {
+        temp_broadcast.post('historygen', i.toString());
+      }
+      var new_history = temp_channel.history.all();
+      var message_sent = new Broadcast._src.InternalEvent('history_sync', {
+        channel_name: test_name,
+        messages: new_history
+      }, broadcast);
+      // we simulate that sample_message was sent later than any message in 'historygen' channel
+      broadcast._time.upstart = +new Date() - 20;
+      var sample_message = broadcast.post(test_name, 'sample message')
+      broadcast._router.parse_message(message_sent);
+      var merged_history = channel.history.all();
+      var since_sample = channel.history.since(sample_message);
+      expect(merged_history.length).toEqual(100);
+      expect(since_sample.length).toEqual(1);
+    });
+  });
+
+  describe('Should route outcoming internal events', function() {
+    var event_type, request;
+    beforeEach(function() {
+      spyOn(broadcast._socket_adapter, 'send').and.callFake(function(internal_event) {
+        event_type = internal_event.event_type;
+        request = internal_event.value;
+      });
+    });
+
+    it('init', function() {
+      broadcast._router.get_init_data();
+      expect(event_type).toEqual('init');
+      expect(request).toBeNull();
+    });
+
+    it('relevancy', function() {
+      var name = channel._name;
+      broadcast._router.set_relevancy(name, false);
+      expect(event_type).toEqual('relevancy');
+      expect(request.channel).toEqual(name);
+      expect(request.toggle).toBeFalsy();
+    });
+  });
 });

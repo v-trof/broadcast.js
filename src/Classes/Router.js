@@ -7,23 +7,22 @@ class Router {
     this._routes = {};
   }
 
-  // TODO: REWRITE
   parse_message(message) {
-    if (! (message instanceof Broadcast._src.Message)) {
-      console.error('message parameter should be an instance of Message class');
-    } else if (message instanceof Broadcast._src.InternalEvent){
+    if (message instanceof Broadcast._src.InternalEvent){
       this.route_event(message);
-    } else {
+    } else if (message instanceof Broadcast._src.Message){
       this.route_message(message);
+    } else {
+      console.error('message parameter should be an instance of Message class');
     }
   }
 
   route_event(message) {
-    var callback = this._routes[message.type];
+    var route = this._routes[message.event_type];
     try {
-      callback(this._host, message.value);
+      return route(this._host, message.value);
     } catch (err) {
-      console.error('broken route for ' + message.type);
+      console.error('broken route for ' + message.event_type);
     }
   }
 
@@ -56,8 +55,8 @@ class Router {
 }
 
 Broadcast._src.Router = Router;
-Broadcast._src.Router.init = function(host) {
-  instance = new Router(host)
+Broadcast._src.Router.init = function(host, socket_adapter) {
+  instance = new Router(host, socket_adapter)
   instance
     .on('init', function(host, value) {
       host._set_upstart(value.upstart);

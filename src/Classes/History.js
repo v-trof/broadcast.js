@@ -14,7 +14,7 @@ class History {
    */
   since(message) {
     var id = this._messages.indexOf(message);
-    if(id == -1) {
+    if(id === -1) {
       console.error('Message', message, 'hasn`t been posted to ', this._host, 'lately.');
       return [];
     }
@@ -48,7 +48,13 @@ class History {
     this._messages.push.apply(this._messages, messages);
     // sort by timestamps
     this._messages.sort(function(x, y) {
-      return x.time > y.time;
+      if (x.time > y.time){
+        return 1;
+      } else if (x.time < y.time){
+        return -1;
+      } else{
+        return 0;
+      }
     });
     if (this._messages.length > this._max_length) {
       this._messages.splice(0, (this._messages.length - this._max_length));

@@ -6,7 +6,6 @@ describe('History', function() {
       broadcast.post(test_name, i);
     }
     message_last = broadcast.post(test_name, 'last');
-    spyOn(console, 'error');
   });
 
   it('exists in channel', function() {
@@ -34,6 +33,7 @@ describe('History', function() {
 
   it('should properly handle the case when a non-existing in the channel\'s ' +
   'history message is passed to history.since(message)', function() {
+    spyOn(console, 'error');
     var since_empty = channel.history.since(new Broadcast._src.Message('this one is definitely non-existent in the channel\'s history', channel._host));
     expect(console.error).toHaveBeenCalled();
     expect(since_empty.length).toEqual(0);

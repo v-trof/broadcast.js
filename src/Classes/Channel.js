@@ -15,12 +15,13 @@ class Channel {
   }
 
   unsubscribe(subscriber) {
+    var id;
     if(typeof subscriber === 'number') {
       //it is id of subscriber object, fine
-      var id = subscriber;
+      id = subscriber;
     } else {
       //find subscriber id
-      var id = this._subscribers.indexOf(subscriber);
+      id = this._subscribers.indexOf(subscriber);
     }
 
     if(id > -1) {
@@ -51,7 +52,7 @@ class Channel {
           this.unsubscribe(current);
         }
       }
-    };
+    }
     return message;
   }
 }

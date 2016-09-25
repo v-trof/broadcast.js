@@ -7,7 +7,9 @@ var Broadcast = (function() {
       this._time = {
         upstart: new Date() //actually request
       };
-      this._router = Broadcast._src.Router.init(this);
+      this._socket_adapter = new Broadcast._src.SocketAdapter(this);
+      this._router = Broadcast._src.Router.init(this, this._socket_adapter);
+      this._socket_adapter._set_router = this._router;
       this.origin = 0; //actually request
     }
 
@@ -68,4 +70,4 @@ var Broadcast = (function() {
 
   Broadcast._src = {};
   return Broadcast;
-})();
+} ());

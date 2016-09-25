@@ -8,7 +8,7 @@ class Subscriber {
 
   react(message) {
     console.warn('No reaction set for a subscriber', this)
-  };
+  }
 }
 
 Broadcast._src.Subscriber = Subscriber;

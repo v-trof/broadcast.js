@@ -1,10 +1,8 @@
 (function() {
 class InternalEvent extends Broadcast._src.Message {
-  constructor(type, value, host) {
-    this.type = type;
-    this.value = value;
-    this.origin = host.origin;
-    this.time = host.get_time();
+  constructor(event_type, value, host) {
+    super(value, host, null);
+    this.event_type = event_type;
   }
 }
 
