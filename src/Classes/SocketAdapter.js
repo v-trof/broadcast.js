@@ -1,16 +1,7 @@
 (function() {
 class SocketAdapter {
-  constructor(host){
-    this._host = host;
-    this._router = null;
-  }
-
-  _set_router(router){
-    if (router instanceof Broadcast._src.Router) {
-      this._router = router;
-    } else {
-      throw new TypeError('router is not an instance of Broadcast._src.Router');
-    }
+  constructor(router){
+    this._router = router;
   }
 
   send(message) {

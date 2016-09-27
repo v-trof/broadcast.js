@@ -8,13 +8,15 @@ describe('Router', function() {
   });
 
   it('should route messages to the mediator', function() {
-    var message_sent = new Broadcast._src.Message('this one should be routed', channel._host, test_name);
+    var message_sent = new Broadcast._src.Message('this one should be routed',
+      channel._host, test_name);
     broadcast._router.parse_message(message_sent);
     expect(router_message_recieved).toEqual(message_sent);
   });
 
   it('should keep the type of value while routing', function () {
-    var message_sent = new Broadcast._src.Message(new File([""], 'filename'), channel._host, test_name);
+    var message_sent = new Broadcast._src.Message(new File([""], 'filename'),
+      channel._host, test_name);
     broadcast._router.parse_message(message_sent);
     expect(router_message_recieved.value).toBe(message_sent.value);
   });
@@ -43,7 +45,8 @@ describe('Router', function() {
         channel_name: test_name,
         messages: new_history
       }, broadcast);
-      // we simulate that sample_message was sent later than any message in 'historygen' channel
+      /* we simulate that sample_message was sent later
+         than any message in 'historygen' channel */
       broadcast._time.upstart = +new Date() - 20;
       var sample_message = broadcast.post(test_name, 'sample message')
       broadcast._router.parse_message(message_sent);
@@ -57,7 +60,8 @@ describe('Router', function() {
   describe('Should route outcoming internal events', function() {
     var event_type, request;
     beforeEach(function() {
-      spyOn(broadcast._socket_adapter, 'send').and.callFake(function(internal_event) {
+      spyOn(broadcast._router._socket_adapter, 'send').and
+        .callFake(function(internal_event) {
         event_type = internal_event.event_type;
         request = internal_event.value;
       });

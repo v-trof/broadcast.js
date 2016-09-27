@@ -1,9 +1,9 @@
 (function() {
 
 class Router {
-  constructor(host, socket_adapter) {
+  constructor(host) {
     this._host = host;
-    this._socket_adapter = socket_adapter;
+    this._socket_adapter = new Broadcast._src.SocketAdapter(this);
     this._routes = {};
   }
 

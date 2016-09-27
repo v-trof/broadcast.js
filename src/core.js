@@ -7,15 +7,16 @@ var Broadcast = (function() {
       this._time = {
         upstart: new Date() //actually request
       };
-      this._socket_adapter = new Broadcast._src.SocketAdapter(this);
-      this._router = Broadcast._src.Router.init(this, this._socket_adapter);
-      this._socket_adapter._set_router = this._router;
+      this._router = Broadcast._src.Router.init(this);
       this.origin = 0; //actually request
     }
 
     //Channel methods
-    _create_channel(channel_name, scope='local', max_history=100, max_failures=this.max_failures) {
-      this._channels[channel_name] = new Broadcast._src.Channel(scope, channel_name, this, max_failures, max_history);
+    _create_channel(channel_name, scope='local', max_history=100,
+        max_failures=this.max_failures) {
+      this._channels[channel_name] = new Broadcast._src.Channel(scope,
+        channel_name, this, max_failures, max_history);
+
       return this._channels[channel_name];
     }
 

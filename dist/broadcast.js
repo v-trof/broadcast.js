@@ -6,13 +6,17 @@ var Broadcast = (function() {
       this.max_failures = max_failures;
       this._time = {
         upstart: new Date() //actually request
-      }
+      };
+      this._router = Broadcast._src.Router.init(this);
       this.origin = 0; //actually request
     }
 
     //Channel methods
-    _create_channel(channel_name, scope='local', max_history=100, max_failures=this.max_failures) {
-      this._channels[channel_name] = new Broadcast._src.Channel(scope, channel_name, this, max_failures, max_history);
+    _create_channel(channel_name, scope='local', max_history=100,
+        max_failures=this.max_failures) {
+      this._channels[channel_name] = new Broadcast._src.Channel(scope,
+        channel_name, this, max_failures, max_history);
+
       return this._channels[channel_name];
     }
 
@@ -31,7 +35,12 @@ var Broadcast = (function() {
         this._create_channel(channel_name);
       }
 
-      return this._channels[channel_name].post(value);
+      if(value instanceof Broadcast._src.Message) {
+        return this._channels[channel_name].post(value);
+      } else {
+        return this._channels[channel_name].post_value(value);
+      }
+
     }
 
     //subscriber methods
@@ -54,11 +63,36 @@ var Broadcast = (function() {
     get_time() {
       return (new Date() - this._time.upstart);
     }
+
+    _set_upstart(value) {
+      this._time.upstart = value;
+    }
   }
 
-  Broadcast._src = {}
+  Broadcast._src = {};
   return Broadcast;
-})();
+} ());
+
+(function () {
+class Message {
+  constructor(value, host, channel_name) {
+    this.value = value;
+    this.origin = host.origin;
+    this.time = host.get_time();
+    this.channel_name = channel_name;
+
+    if(value instanceof File) {
+      this.type = 'File';
+    } else if (value instanceof Blob) {
+      this.type = 'Blob';
+    } else {
+      this.type = typeof value;
+    }
+  }
+}
+
+Broadcast._src.Message = Message;
+} ());
 
 (function () {
 class Channel {
@@ -77,12 +111,13 @@ class Channel {
   }
 
   unsubscribe(subscriber) {
+    var id;
     if(typeof subscriber === 'number') {
       //it is id of subscriber object, fine
-      var id = subscriber;
+      id = subscriber;
     } else {
       //find subscriber id
-      var id = this._subscribers.indexOf(subscriber);
+      id = this._subscribers.indexOf(subscriber);
     }
 
     if(id > -1) {
@@ -90,10 +125,13 @@ class Channel {
     }
   }
 
-  //messaging methods
-  post(value) {
+  post_value(value) {
     var message = new Broadcast._src.Message(value, this._host, this._name);
+    return this.post(message);
+  }
 
+  //messaging methods
+  post(message) {
     this.history.add(message);
     for(var current = 0; current < this._subscribers.length; current++) {
       var subscriber = this._subscribers[current];
@@ -110,7 +148,7 @@ class Channel {
           this.unsubscribe(current);
         }
       }
-    };
+    }
     return message;
   }
 }
@@ -134,7 +172,7 @@ class History {
    */
   since(message) {
     var id = this._messages.indexOf(message);
-    if(id == -1) {
+    if(id === -1) {
       console.error('Message', message, 'hasn`t been posted to ', this._host, 'lately.');
       return [];
     }
@@ -164,31 +202,122 @@ class History {
     }
   }
 
-  sync() {}
+  sync(messages) {
+    this._messages.push.apply(this._messages, messages);
+    // sort by timestamps
+    this._messages.sort(function(x, y) {
+      if (x.time > y.time){
+        return 1;
+      } else if (x.time < y.time){
+        return -1;
+      } else{
+        return 0;
+      }
+    });
+    if (this._messages.length > this._max_length) {
+      this._messages.splice(0, (this._messages.length - this._max_length));
+    }
+  }
 }
 
 Broadcast._src.History = History;
 } ());
 
-(function () {
-class Message {
-  constructor(value, host, channel_name) {
-    this.value = value;
-    this.origin = host.origin;
-    this.time = host.get_time();
-    this.channel_name = channel_name;
-
-    if(value instanceof File) {
-      this.type = 'File';
-    } else if (value instanceof Blob) {
-      this.type = 'Blob';
-    } else {
-      this.type = typeof value;
-    }
+(function() {
+class InternalEvent extends Broadcast._src.Message {
+  constructor(event_type, value, host) {
+    super(value, host, null);
+    this.event_type = event_type;
   }
 }
 
-Broadcast._src.Message = Message;
+Broadcast._src.InternalEvent = InternalEvent;
+} ());
+
+(function() {
+
+class Router {
+  constructor(host) {
+    this._host = host;
+    this._socket_adapter = new Broadcast._src.SocketAdapter(this);
+    this._routes = {};
+  }
+
+  parse_message(message) {
+    if (message instanceof Broadcast._src.InternalEvent){
+      this.route_event(message);
+    } else if (message instanceof Broadcast._src.Message){
+      this.route_message(message);
+    } else {
+      console.error('message parameter should be an instance of Message class');
+    }
+  }
+
+  route_event(message) {
+    var route = this._routes[message.event_type];
+    try {
+      return route(this._host, message.value);
+    } catch (err) {
+      console.error('broken route for ' + message.event_type);
+    }
+  }
+
+  route_message(message) {
+    this._host.post(message.channel_name, message);
+  }
+
+  on(event_type, callback) {
+    if (typeof callback === 'function') {
+      this._routes[event_type] = callback;
+    } else {
+      console.error('callback parameter should be a type of Function');
+    }
+    return this;
+  }
+
+  get_init_data() {
+    var request = new Broadcast._src.InternalEvent('init', null, this._host);
+    this._socket_adapter.send(request);
+  }
+
+  set_relevancy(channel_name, toggle) {
+    var request = new Broadcast._src.InternalEvent('relevancy', {
+      channel: channel_name,
+      relevancy: toggle
+    }, this._host);
+    this._socket_adapter.send(request);
+  }
+
+}
+
+Broadcast._src.Router = Router;
+Broadcast._src.Router.init = function(host, socket_adapter) {
+  instance = new Router(host, socket_adapter)
+  instance
+    .on('init', function(host, value) {
+      host._set_upstart(value.upstart);
+      host.origin = value.origin;
+    })
+    .on('history_sync', function(host, value){
+      host._channels[value.channel_name].history.sync(value.messages);
+    });
+  return instance;
+}
+} ());
+
+(function() {
+class SocketAdapter {
+  constructor(router){
+    this._router = router;
+  }
+
+  send(message) {
+    console.log('skel implementation of send(message) has been called');
+  }
+  // TODO: implement the SocketAdapter
+}
+
+Broadcast._src.SocketAdapter = SocketAdapter;
 } ());
 
 (function () {
@@ -201,7 +330,7 @@ class Subscriber {
 
   react(message) {
     console.warn('No reaction set for a subscriber', this)
-  };
+  }
 }
 
 Broadcast._src.Subscriber = Subscriber;
