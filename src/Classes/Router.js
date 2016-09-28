@@ -39,6 +39,12 @@ class Router {
     return this;
   }
 
+  send_message(message) {
+    if (message.origin === this._host.origin) {
+      this._socket_adapter.send(message);
+    }
+  }
+
   get_init_data() {
     var request = new Broadcast._src.InternalEvent('init', null, this._host);
     this._socket_adapter.send(request);

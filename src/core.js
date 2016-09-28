@@ -7,16 +7,15 @@ var Broadcast = (function() {
       this._time = {
         upstart: new Date() //actually request
       };
-      this._router = Broadcast._src.Router.init(this);
+      this._socket_adapter = new Broadcast._src.SocketAdapter(this);
+      this._router = Broadcast._src.Router.init(this, this._socket_adapter);
+      this._socket_adapter._set_router = this._router;
       this.origin = 0; //actually request
     }
 
     //Channel methods
-    _create_channel(channel_name, scope='local', max_history=100,
-        max_failures=this.max_failures) {
-      this._channels[channel_name] = new Broadcast._src.Channel(scope,
-        channel_name, this, max_failures, max_history);
-
+    _create_channel(channel_name, scope='local', max_history=100, max_failures=this.max_failures) {
+      this._channels[channel_name] = new Broadcast._src.Channel(scope, channel_name, this, max_failures, max_history);
       return this._channels[channel_name];
     }
 
@@ -35,12 +34,16 @@ var Broadcast = (function() {
         this._create_channel(channel_name);
       }
 
+      var to_send;
       if(value instanceof Broadcast._src.Message) {
-        return this._channels[channel_name].post(value);
+        to_send = value;
       } else {
-        return this._channels[channel_name].post_value(value);
+        to_send = new Broadcast._src.Message(value, this, channel_name);
       }
-
+      if (this._channels[channel_name].scope === 'global') {
+        this._router.send_message(to_send);
+      }
+      return this._channels[channel_name].post(to_send);
     }
 
     //subscriber methods

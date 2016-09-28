@@ -81,4 +81,36 @@ describe('Router', function() {
       expect(request.toggle).toBeFalsy();
     });
   });
+
+  it('should sync all messages in global channels to a remote', function() {
+    var value, channel_name;
+    spyOn(broadcast._router._socket_adapter, 'send').and
+      .callFake(function(message) {
+       value = message.value;
+       channel_name = message.channel_name;
+    });
+    var global_name = 'global_test';
+    broadcast._create_channel(global_name, 'global');
+    var sent = broadcast.post(global_name,
+      'this should be synced to a remote mediator through router');
+    expect(value).toEqual(sent.value);
+    expect(channel_name).toEqual(channel_name);
+  });
+
+  it('should not sync local channels', function() {
+    spyOn(broadcast._router._socket_adapter, 'send');
+    broadcast.post(test_name, 'this one wouldn\'t be synced');
+    expect(broadcast._router._socket_adapter.send).not.toHaveBeenCalled();
+  });
+
+  it('should not redirect incoming messages with a different origin back', function() {
+    spyOn(broadcast._router._socket_adapter, 'send');
+    var global_name = 'global_test';
+    broadcast._create_channel(global_name, 'global');
+    var incoming_message = new Broadcast._src.Message('this one is incoming from a different origin',
+      broadcast, global_name);
+    incoming_message.origin = 1;
+    broadcast._router.parse_message(incoming_message);
+    expect(broadcast._router._socket_adapter.send).not.toHaveBeenCalled();
+  });
 });
