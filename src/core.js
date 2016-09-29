@@ -24,9 +24,7 @@ var Broadcast = (function() {
     }
 
     edit_channel(channel_name, props) {
-      for(var key in props) {
-        this._channels[channel_name][key] = props[key];
-      }
+      this._channels[channel_name].edit(props);
     }
 
     post(channel_name, value) {

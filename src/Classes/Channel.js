@@ -9,6 +9,25 @@ class Channel {
     this.history = new Broadcast._src.History(this, max_history);
   }
 
+  edit(properties) {
+    for(var key in properties) {
+      if(key.match(/^_/)) {
+        return console.error('private properties of a channel are not editable');
+      }
+      if(key === 'max_history') {
+        var old_history = this.history.all();
+        this.history = new Broadcast._src.History(this, properties[key]);
+        this.history.sync(old_history);
+      } else {
+        if(this.hasOwnProperty(key)) {
+          this[key] = properties[key];
+        } else {
+          return console.error('non-existing properties of a channel are not editable');
+        }
+      }
+    }
+  }
+
   //subscriber methods
   subscribe(subscriber) {
     this._subscribers.push(subscriber);
@@ -27,11 +46,6 @@ class Channel {
     if(id > -1) {
       this._subscribers.splice(id, 1);
     }
-  }
-
-  post_value(value) {
-    var message = new Broadcast._src.Message(value, this._host, this._name);
-    return this.post(message);
   }
 
   //messaging methods

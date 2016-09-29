@@ -31,6 +31,25 @@ describe('Channel', function() {
     expect(channel.max_failures).toEqual(100);
   });
 
+  it('should not allow to edit its private properties or ones that don\'t exist',
+      function() {
+    spyOn(console, 'error');
+    broadcast.edit_channel(test_name, {_host: this});
+    broadcast.edit_channel(test_name, {some_prop: 'test_value'});
+    expect(console.error).toHaveBeenCalledTimes(2);
+  });
+
+  it('should allow editing max_history', function() {
+    var test_message = broadcast.post(test_name, 'first one');
+    var stays_in_history = broadcast.post(test_name, 'second one');
+    broadcast.edit_channel(test_name, {max_history: 1});
+    var new_history = channel.history.all();
+
+    expect(new_history.length).toEqual(1);
+    expect(new_history).not.toContain(test_message);
+    expect(new_history).toContain(stays_in_history);
+  });
+
   it('should allow subscribtion', function() {
     subscriber = broadcast.subscribe(test_name, function(value, message) {
       message_recieved = message;
