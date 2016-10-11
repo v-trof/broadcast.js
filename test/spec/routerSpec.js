@@ -25,7 +25,7 @@ describe('Router', function() {
     it('init', function() {
       var new_upstart = new Date();
       var new_origin = Math.floor(Math.random() * 100 + 1) + 1;
-      var message_sent = new Broadcast._src.InternalEvent('init', {
+      var message_sent = new Broadcast._src.Internal_event('init', {
         upstart: new_upstart,
         origin: new_origin
       }, broadcast);
@@ -41,7 +41,7 @@ describe('Router', function() {
         temp_broadcast.post('historygen', i.toString());
       }
       var new_history = temp_channel.history.all();
-      var message_sent = new Broadcast._src.InternalEvent('history_sync', {
+      var message_sent = new Broadcast._src.Internal_event('history_sync', {
         channel_name: test_name,
         messages: new_history
       }, broadcast);

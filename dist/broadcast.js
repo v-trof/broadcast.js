@@ -97,7 +97,7 @@ Broadcast._src.Message = Message;
 } ());
 
 (function() {
-  class AbstractRouter {
+  class Abstract_Router {
     constructor(host) {
       this._host = host;
       this._routes = {};
@@ -122,7 +122,7 @@ Broadcast._src.Message = Message;
     }
   }
 
-Broadcast._src.AbstractRouter = AbstractRouter;
+Broadcast._src.Abstract_Router = Abstract_Router;
 } ());
 
 (function () {
@@ -269,14 +269,14 @@ Broadcast._src.History = History;
 } ());
 
 (function() {
-class InternalEvent extends Broadcast._src.Message {
+class Internal_event extends Broadcast._src.Message {
   constructor(event_type, value, host) {
     super(value, host, null);
     this.event_type = event_type;
   }
 }
 
-Broadcast._src.InternalEvent = InternalEvent;
+Broadcast._src.Internal_event = Internal_event;
 } ());
 
 (function() {
@@ -289,7 +289,7 @@ class Router {
   }
 
   parse_message(message) {
-    if (message instanceof Broadcast._src.InternalEvent){
+    if (message instanceof Broadcast._src.Internal_event){
       this.route_event(message);
     } else if (message instanceof Broadcast._src.Message){
       this.route_message(message);
@@ -327,12 +327,12 @@ class Router {
   }
 
   get_init_data() {
-    var request = new Broadcast._src.InternalEvent('init', null, this._host);
+    var request = new Broadcast._src.Internal_event('init', null, this._host);
     this._socket_adapter.send(request);
   }
 
   set_relevancy(channel_name, toggle) {
-    var request = new Broadcast._src.InternalEvent('relevancy', {
+    var request = new Broadcast._src.Internal_event('relevancy', {
       channel: channel_name,
       relevancy: toggle
     }, this._host);

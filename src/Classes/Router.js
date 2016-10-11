@@ -3,12 +3,12 @@
 class Router {
   constructor(host) {
     this._host = host;
-    this._socket_adapter = new Broadcast._src.SocketAdapter(this);
+    this._socket_adapter = new Broadcast._src.Socket_Adapter(this, server_url);
     this._routes = {};
   }
 
   parse_message(message) {
-    if (message instanceof Broadcast._src.InternalEvent){
+    if (message instanceof Broadcast._src.Internal_event){
       this.route_event(message);
     } else if (message instanceof Broadcast._src.Message){
       this.route_message(message);
@@ -46,12 +46,12 @@ class Router {
   }
 
   get_init_data() {
-    var request = new Broadcast._src.InternalEvent('init', null, this._host);
+    var request = new Broadcast._src.Internal_event('init', null, this._host);
     this._socket_adapter.send(request);
   }
 
   set_relevancy(channel_name, toggle) {
-    var request = new Broadcast._src.InternalEvent('relevancy', {
+    var request = new Broadcast._src.Internal_event('relevancy', {
       channel: channel_name,
       relevancy: toggle
     }, this._host);
@@ -62,7 +62,7 @@ class Router {
 
 Broadcast._src.Router = Router;
 Broadcast._src.Router.init = function(host, socket_adapter) {
-  instance = new Router(host, socket_adapter)
+  var instance = new Router(host, socket_adapter)
   instance
     .on('init', function(host, value) {
       host._set_upstart(value.upstart);

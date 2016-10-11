@@ -1,5 +1,5 @@
 (function() {
-  class AbstractRouter {
+  class Abstract_Router {
     constructor(host) {
       this._host = host;
       this._routes = {};
@@ -24,5 +24,5 @@
     }
   }
 
-Broadcast._src.AbstractRouter = AbstractRouter;
+Broadcast._src.Abstract_Router = Abstract_Router;
 } ());

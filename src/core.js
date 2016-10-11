@@ -1,13 +1,13 @@
 var Broadcast = (function() {
 
   class Broadcast {
-    constructor(max_failures=5) {
+    constructor(server_url ,max_failures=5) {
       this._channels = {};
       this.max_failures = max_failures;
       this._time = {
         upstart: new Date() //actually request
       };
-      this._router = Broadcast._src.Router.init(this);
+      this._router = Broadcast._src.Router.init(this, server_url);
       this.origin = 0; //actually request
     }
 

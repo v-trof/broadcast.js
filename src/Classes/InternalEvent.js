@@ -1,10 +1,10 @@
 (function() {
-class InternalEvent extends Broadcast._src.Message {
+class Internal_Event extends Broadcast._src.Message {
   constructor(event_type, value, host) {
     super(value, host, null);
     this.event_type = event_type;
   }
 }
 
-Broadcast._src.InternalEvent = InternalEvent;
+Broadcast._src.Internal_event = Internal_event;
 } ());
