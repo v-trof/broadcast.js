@@ -7,7 +7,7 @@ var Broadcast = (function() {
       this._time = {
         upstart: new Date() //actually request
       };
-      this._router = Broadcast._src.Router.init(this);
+      this._router = new Broadcast._src.Router.init(this);
       this.origin = 0; //actually request
     }
 
@@ -269,14 +269,14 @@ Broadcast._src.History = History;
 } ());
 
 (function() {
-class Internal_event extends Broadcast._src.Message {
+class Internal_Event extends Broadcast._src.Message {
   constructor(event_type, value, host) {
     super(value, host, null);
     this.event_type = event_type;
   }
 }
 
-Broadcast._src.Internal_event = Internal_event;
+Broadcast._src.Internal_Event = Internal_Event;
 } ());
 
 (function() {
@@ -289,7 +289,7 @@ class Router {
   }
 
   parse_message(message) {
-    if (message instanceof Broadcast._src.Internal_event){
+    if (message instanceof Broadcast._src.Internal_Event){
       this.route_event(message);
     } else if (message instanceof Broadcast._src.Message){
       this.route_message(message);
@@ -327,12 +327,12 @@ class Router {
   }
 
   get_init_data() {
-    var request = new Broadcast._src.Internal_event('init', null, this._host);
+    var request = new Broadcast._src.Internal_Event('init', null, this._host);
     this._socket_adapter.send(request);
   }
 
   set_relevancy(channel_name, toggle) {
-    var request = new Broadcast._src.Internal_event('relevancy', {
+    var request = new Broadcast._src.Internal_Event('relevancy', {
       channel: channel_name,
       relevancy: toggle
     }, this._host);

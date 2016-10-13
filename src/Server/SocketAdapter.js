@@ -7,9 +7,13 @@ class Socket_Adapter {
 
     this.socket.onopen = function() {
       var event = new Internal_Event()
-      reciever()
     }
+
+    this.socket.send({"obj": true});
+
+    this.on = {};
   }
+
 
   send(message) {
     console.log('skel implementation of send(message) has been called');

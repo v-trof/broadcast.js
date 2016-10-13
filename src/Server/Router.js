@@ -8,7 +8,7 @@ class Router {
   }
 
   parse_message(message) {
-    if (message instanceof Broadcast._src.Internal_event){
+    if (message instanceof Broadcast._src.Internal_Event){
       this.route_event(message);
     } else if (message instanceof Broadcast._src.Message){
       this.route_message(message);
@@ -46,12 +46,12 @@ class Router {
   }
 
   get_init_data() {
-    var request = new Broadcast._src.Internal_event('init', null, this._host);
+    var request = new Broadcast._src.Internal_Event('init', null, this._host);
     this._socket_adapter.send(request);
   }
 
   set_relevancy(channel_name, toggle) {
-    var request = new Broadcast._src.Internal_event('relevancy', {
+    var request = new Broadcast._src.Internal_Event('relevancy', {
       channel: channel_name,
       relevancy: toggle
     }, this._host);

@@ -67,7 +67,7 @@ describe('Channel', function() {
 
     it('can be custom', function() {
       for(var i=0; i<100; i++) {
-        var another_broadcast = new Broadcast(i);
+        var another_broadcast = Broadcast.init(false, i);
         var another_channel = another_broadcast._create_channel(test_name);
         expect(another_broadcast._channels[test_name].max_failures).toEqual(i);
       }

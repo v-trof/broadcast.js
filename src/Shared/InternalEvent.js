@@ -6,5 +6,5 @@ class Internal_Event extends Broadcast._src.Message {
   }
 }
 
-Broadcast._src.Internal_event = Internal_event;
+Broadcast._src.Internal_Event = Internal_Event;
 } ());
