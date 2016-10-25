@@ -1,6 +1,7 @@
 (function() {
 
 class Socket_Adapter {
+  // TODO: migrate to a nodejs websocket server, the most suitable one
   constructor(reciever, server_url) {
     this._ws_url = server_url;
     this.socket = new WebSocket(server_url);
