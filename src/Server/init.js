@@ -1,3 +1,4 @@
+var 
 var Router = require('./Router');
 
 //Will be Broadcast.init

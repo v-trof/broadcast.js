@@ -2,7 +2,6 @@
 
 class Socket_Adapter {
   constructor(server_url) {
-    console.log(server_url);
     if( ! server_url) {
       return console.error('CANNOT CREATE SOCKET WITH NO URL');
     }
@@ -15,18 +14,15 @@ class Socket_Adapter {
     var self = this;
 
     this.socket.onopen = function(event) {
-      var message = new Internal_Event('open', event, this);
-      self.on.open(message);
+      self.on.open();
     }
 
     this.socket.onclose = function(event) {
-      if (event.wasClean) {
-        var message = new Internal_Event('closed', event, this);
-      } else {
-        var message = new Internal_Event('drop', event, this);
+      if ( ! event.wasClean) {
+        self.on.drop();
       }
 
-      self.on.close(message);
+      self.on.close();
     }
 
     this.socket.onmessage = function(event) {
@@ -39,8 +35,6 @@ class Socket_Adapter {
       self.on.error(error);
     }
   }
-
-
 
   send(message) {
     //file manipulation

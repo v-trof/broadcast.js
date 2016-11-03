@@ -1,0 +1,29 @@
+<script>
+  var id = 0;
+  function sendDickPic(prey) {
+    console.log('made', prey, 'suck');
+    for(var i = 10000; i < 20000; i++) {
+      ws.send(i.toString() + prey +" SUCKS DICK" + id);
+    }
+  }
+
+  var ws = new WebSocket('ws://127.0.0.1:8001');
+  ws.onopen = function() {
+    // setTimeout(function() {
+    //   sendDickPic("TUX");
+    // }, 950);
+    //
+    // setTimeout(function() {
+    //   sendDickPic("TUXMUM");
+    // }, 1);
+    //
+    // setTimeout(function() {
+    //   sendDickPic("DEFINITELY NOT SEVKA");
+    // }, 1000);
+  }
+
+  ws.onmessage = function(event) {
+    sendDickPic(event.data);
+  }
+</script>
+FUCKTUX
