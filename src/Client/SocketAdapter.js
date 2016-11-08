@@ -3,13 +3,11 @@
 class Socket_Adapter {
   constructor(server_url) {
     if( ! server_url) {
-      return console.error('CANNOT CREATE SOCKET WITH NO URL');
+      return console.error('Cannot create socket with no server URL');
     }
 
     this._ws_url = server_url;
     this.socket = new WebSocket(server_url);
-
-    this.on = {};
 
     var self = this;
 

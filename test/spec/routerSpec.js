@@ -90,6 +90,8 @@ describe('Router', function() {
        value = message.value;
        channel_name = message.channel_name;
     });
+    /* fake socket initialization */
+    broadcast._router._socket_state = 1;
     var global_name = 'global_test';
     broadcast._create_channel(global_name, 'global');
     var sent = broadcast.post(global_name,

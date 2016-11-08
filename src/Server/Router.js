@@ -6,7 +6,7 @@ class Router extends Broadcast._src.Abstract_Router {
     this._socket_adapter = new Broadcast._src.Socket_Adapter(this, server_url);
     this._сhannels = {}; // holds lists of subscribers for every channel
     /* the format is:
-    * channel: [Socket, Socket, Socket...] */
+    * channel: [Origin, Origin, Origin...] */
   }
 
   route_message(message) {
